@@ -1,112 +1,136 @@
-import React from "react";
+import React, { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 const Dashboard = () => {
-  const stats = [
-    { title: "Total Users", value: "1,245" },
-    { title: "Revenue", value: "$12,300" },
-    { title: "Active Sessions", value: "87" },
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const visitData = [
+    { time: "00-04", male: 0, female: 0, other: 0 },
+    { time: "08-12", male: 19, female: 15, other: 9 },
+    { time: "12-16", male: 6, female: 2, other: 1 },
   ];
 
-  const data = [
-    { id: 1, name: "Dimas Fajar", email: "dimas@example.com", status: "Active" },
-    { id: 2, name: "Rina Putri", email: "rina@example.com", status: "Inactive" },
-    { id: 3, name: "Andi Pratama", email: "andi@example.com", status: "Active" },
+  const cards = [
+    {
+      title: "Kunjungan Asuransi",
+      value: 0,
+      desc: "Tidak ada penambahan jumlah Kunjungan Asuransi pada daftar klinik anda",
+    },
+    {
+      title: "Kunjungan BPJS",
+      value: 50,
+      desc: "Terdapat penambahan jumlah Kunjungan BPJS sebanyak 50 pada daftar klinik anda",
+    },
+    {
+      title: "Kunjungan Umum",
+      value: 2,
+      desc: "Terdapat penambahan jumlah Kunjungan Umum sebanyak 2 pada daftar klinik anda",
+    },
+  ];
+
+  const events = [
+    { title: "Jadwal Jaga", start: "2025-11-03" },
+    { title: "Jadwal Jaga", start: "2025-11-05" },
+    { title: "Jadwal Pengganti", start: "2025-11-07", color: "#facc15" },
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md">
-        <div className="p-4 text-xl font-bold text-blue-600 border-b">
-          MedevaMint
-        </div>
-        <nav className="p-4 space-y-2">
-          <a
-            href="#"
-            className="block rounded-lg px-3 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600"
+    <main className="space-y-6">
+      {/* Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {cards.map((card, i) => (
+          <div
+            key={i}
+            className="bg-white rounded-xl shadow p-4 border border-gray-100"
           >
-            Dashboard
-          </a>
-          <a
-            href="#"
-            className="block rounded-lg px-3 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600"
-          >
-            Users
-          </a>
-          <a
-            href="#"
-            className="block rounded-lg px-3 py-2 text-gray-700 hover:bg-blue-100 hover:text-blue-600"
-          >
-            Settings
-          </a>
-        </nav>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
-          <div className="flex items-center gap-2">
-            <img
-              src="https://ui-avatars.com/api/?name=Dimas+Fajar"
-              alt="User avatar"
-              className="w-8 h-8 rounded-full"
-            />
-            <span className="font-medium text-gray-700">Dimas</span>
-          </div>
-        </header>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          {stats.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white p-4 rounded-xl shadow hover:shadow-md transition"
-            >
-              <p className="text-gray-500 text-sm">{item.title}</p>
-              <h2 className="text-2xl font-bold text-blue-600">{item.value}</h2>
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <p className="text-sm font-medium text-gray-600">
+                  {card.title}
+                </p>
+                <h3 className="text-3xl font-bold text-blue-600">
+                  {card.value}
+                </h3>
+              </div>
+              <button className="text-xs bg-gray-50 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600">
+                Hari ini
+              </button>
             </div>
-          ))}
+            <p className="text-sm text-gray-500 leading-snug">
+              {card.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Chart + Calendar */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Chart */}
+        <div className="lg:col-span-2 bg-white rounded-xl shadow p-4 border border-gray-100">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-semibold text-gray-700">
+              Jumlah Kunjungan
+            </h3>
+            <button className="text-xs bg-gray-50 px-2 py-1 rounded-md text-gray-500 hover:text-blue-600">
+              Hari ini
+            </button>
+          </div>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={visitData}>
+              <XAxis dataKey="time" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="male" fill="#3b82f6" name="Laki-laki" />
+              <Bar dataKey="female" fill="#ec4899" name="Perempuan" />
+              <Bar dataKey="other" fill="#f97316" name="Lainnya" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
 
-        {/* Table */}
-        <div className="bg-white rounded-xl shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Recent Users</h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="text-left text-gray-600 border-b">
-                <th className="p-2">Name</th>
-                <th className="p-2">Email</th>
-                <th className="p-2">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-b hover:bg-gray-50 transition"
-                >
-                  <td className="p-2">{user.name}</td>
-                  <td className="p-2">{user.email}</td>
-                  <td className="p-2">
-                    <span
-                      className={`px-2 py-1 rounded text-sm ${
-                        user.status === "Active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
-                    >
-                      {user.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* FullCalendar */}
+        <div className="bg-white rounded-xl shadow p-4 border border-gray-100">
+          <h3 className="font-semibold text-gray-700 mb-3">
+            Jadwal Jaga
+          </h3>
+          <FullCalendar
+            plugins={[dayGridPlugin, interactionPlugin]}
+            initialView="dayGridMonth"
+            events={events}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "",
+            }}
+            height="auto"
+            dateClick={(info) => alert(`Tanggal dipilih: ${info.dateStr}`)}
+          />
+          <div className="flex justify-center gap-4 mt-3 text-sm text-gray-500">
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 bg-blue-500 rounded-full"></span>
+              <span>Jadwal Jaga</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
+              <span>Jadwal Pengganti</span>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 };
 
