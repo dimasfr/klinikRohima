@@ -179,7 +179,7 @@ import { Toaster, toast } from "react-hot-toast";
 ## 🧑‍💻 Author
 
 **Dimas Fajar Ramadhan**  
-Fullstack Developer — Laravel + Vue  
+Fullstack Developer — React + Express  
 📧 dimasfr918@gmail.com  
 🌐 https://github.com/dimasfr
 
