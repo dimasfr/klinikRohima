@@ -4,11 +4,8 @@ import {
   Settings,
   Menu,
   X,
-  ChevronRight,
   ChevronLeft,
-  Users,
-  Shield,
-  Activity,
+  Users
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -24,18 +21,12 @@ const Sidebar = () => {
     {
       name: "Pengaturan",
       icon: Settings,
+      path: "/settings",
       submenu: [
         {
           title: "Karyawan",
           items: [
             { name: "Data Karyawan", key: "dataKaryawan", icon: Users, path: "/settings/karyawan" },
-          ],
-        },
-        {
-          title: "Pengaturan Sistem",
-          items: [
-            { name: "Role & Permission", key: "rolePermission", icon: Shield },
-            { name: "Log Aktivitas", key: "logAktivitas", icon: Activity },
           ],
         },
       ],
@@ -79,25 +70,29 @@ const Sidebar = () => {
         <nav className="p-2 flex flex-col items-center gap-2">
           {menus.map((menu) => {
             const Icon = menu.icon;
-            const isActive = location.pathname === menu.path;
+            const isActive =
+              location.pathname === menu.path ||
+              location.pathname.startsWith(menu.path + "/");
 
             if (!menu.submenu) {
               return (
                 <Link
                   key={menu.name}
                   to={menu.path}
-                  onClick={() => {setOpen(false); setFlyout(null);} }
-                  className={`flex flex-col items-center justify-center gap-1 py-4 rounded-xl text-xs font-medium transition
+                  onClick={() => {
+                    setOpen(false);
+                    setFlyout(null);
+                  }}
+                  className={`flex flex-col items-center justify-center gap-1 py-4 px-2 text-xs font-medium transition
                     ${
                       isActive
-                        ? "bg-blue-50 text-blue-600 border-l-4 border-blue-500"
+                        ? "bg-blue-100 text-blue-700 border-l-4 border-blue-600"
                         : "text-gray-500 hover:bg-gray-50"
                     }`}
                 >
                   <Icon size={28} strokeWidth={1.8} />
                   <span className="text-[11px]">{menu.name}</span>
                 </Link>
-
               );
             }
 
@@ -105,11 +100,15 @@ const Sidebar = () => {
             return (
               <button
                 key={menu.name}
-                onClick={() => setFlyout(menu.name)}
-                className={`flex flex-col items-center justify-center gap-1 py-4 rounded-xl text-xs font-medium transition
+                onClick={() =>
+                  setFlyout(flyout === menu.name ? null : menu.name)
+                }
+                className={`flex flex-col items-center justify-center gap-1 py-4 px-2 text-xs font-medium transition
                   ${
                     flyout === menu.name
-                      ? "bg-blue-50 text-blue-600 border-l-4 border-blue-500"
+                      ? "bg-blue-50 text-blue-600 border-l-4 border-blue-400"
+                      : isActive
+                      ? "bg-blue-100 text-blue-700 border-l-4 border-blue-600"
                       : "text-gray-500 hover:bg-gray-50"
                   }`}
               >
@@ -117,6 +116,7 @@ const Sidebar = () => {
                 <span className="text-[11px]">{menu.name}</span>
               </button>
             );
+
           })}
         </nav>
       </aside>
