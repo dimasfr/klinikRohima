@@ -255,7 +255,11 @@ const DataKaryawan = () => {
   );
 
   return (
-    <div className={`${loading ? "opacity-30 pointer-events-none" : "grid lg:grid-cols-[30%_70%] gap-4"}`}>
+    <div
+      className={`grid lg:grid-cols-[30%_70%] gap-4 ${
+        loading ? "opacity-30 pointer-events-none" : ""
+      }`}
+    >
       <LoadingOverlay show={loading} text="Memuat data pengguna..." />
       {/* Daftar Karyawan */}
       <div className="bg-white rounded-xl shadow border border-gray-100">

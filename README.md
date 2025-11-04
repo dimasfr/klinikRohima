@@ -50,6 +50,7 @@ cd klinikRohima
 ```bash
 cd backend
 npm install
+node seed.js
 ```
 
 Buat file `.env` di folder `backend`:
