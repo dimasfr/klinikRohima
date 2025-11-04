@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import DataKaryawan from "./pages/DataKaryawan";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Toast from "./components/common/Toast";
 
 // Render root app
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           </Route>
         </Route>
       </Routes>
+      <Toast />
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -5,6 +5,7 @@ import { User, MoreVertical, ChevronRight, Search, Plus } from "lucide-react";
 import dataWilayah from "../data/dataWilayah";
 import { getEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee } from "../services/employeeService";
 import LoadingOverlay from "../components/common/LoadingOverlay";
+import { toastError, toastSuccess, toastWarning } from "../components/common/Toast";
 
 const employeeSchema = Yup.object().shape({
   fullName: Yup.string().required("Nama lengkap wajib diisi"),
@@ -18,7 +19,11 @@ const employeeSchema = Yup.object().shape({
     .nullable()
     .required("Tanggal lahir wajib diisi")
     .max(new Date(), "Tanggal lahir tidak boleh di masa depan"),
-  username: Yup.string().required("Username wajib diisi"),
+  username: Yup.string()
+    .required("Username wajib diisi")
+    .matches(/^[a-zA-Z0-9_]+$/, "Username hanya boleh huruf, angka, dan underscore")
+    .min(3, "Username minimal 3 karakter")
+    .max(30, "Username maksimal 30 karakter"),
   email: Yup.string()
     .email("Format email tidak valid")
     .required("Email wajib diisi"),
@@ -171,10 +176,10 @@ const DataKaryawan = () => {
 
       if (status === "New") {
         await createEmployee(formData);
-        alert("Employee berhasil ditambahkan!");
+        toastSuccess("Data karyawan berhasil ditambahkan!");
       } else if (status === "Edit") {
         await updateEmployee(formData.id, formData);
-        alert("Employee berhasil diperbarui!");
+        toastSuccess("Data karyawan berhasil diperbarui!");
       }
 
       handleResetForm();
@@ -187,7 +192,7 @@ const DataKaryawan = () => {
         });
         setError(formattedErrors);
       } else {
-        setError({ global: err.response?.data?.message || err.message });
+        toastError(err.response?.data?.message || err.message);
       }
     } finally {
       setLoading(false);
@@ -844,10 +849,10 @@ const DataKaryawan = () => {
             </button>
             <button
               type="submit"
-              disabled={user.role !== "Admin"}
+              disabled={user.position !== "Admin"}
               className={`px-6 py-2 rounded-lg font-medium transition-colors duration-200
                 ${
-                  user.role !== "Admin"
+                  user.position !== "Admin"
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-blue-600 hover:bg-blue-700 text-white"
                 }
