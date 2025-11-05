@@ -50,7 +50,6 @@ cd klinikRohima
 ```bash
 cd backend
 npm install
-node seed.js
 ```
 
 Buat file `.env` di folder `backend`:
@@ -59,6 +58,11 @@ PORT=5000
 MONGO_URI=mongodb+srv://...
 JWT_SECRET=your_secret_key
 JWT_EXPIRES=7d
+```
+
+Jalankan seed
+```bash
+node seed.js
 ```
 
 Jalankan server backend:
